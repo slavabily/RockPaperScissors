@@ -20,34 +20,41 @@ struct ContentView: View {
     
     
     var body: some View {
-        VStack {
-            Text("Score: \(score)")
-            
-            Spacer()
-            
-            Text(possibleMoves[appCurrentChoise])
-            
-            Text(shouldPlayerWin ? "Win" : "Loose")
-            
-            Spacer()
-            
-            HStack {
-                ForEach(0..<3) { number in
-                    Button(action: {
-                        self.buttonTapped(number)
-                    }) {
-                        Text(self.possibleMoves[number])
+        NavigationView {
+            VStack {
+                
+                Text("Score: \(score)")
+                    .font(.headline)
+                
+                Spacer()
+                
+                Text(possibleMoves[appCurrentChoise])
+                
+                Text(shouldPlayerWin ? "Win" : "Loose")
+                
+                Spacer()
+                
+                HStack(spacing: 30) {
+                    ForEach(0..<3) { number in
+                        Button(action: {
+                            self.buttonTapped(number)
+                        }) {
+                            Text(self.possibleMoves[number])
+                        }
                     }
                 }
             }
+            .navigationBarTitle("Rock Paper Scissors")
+            .font(.largeTitle)
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text("Game over"), message: Text("Your score is \(score)"), dismissButton: .default(Text("Continue"), action: {
+                    self.score = 0
+                    self.questionNumber = 1
+                    self.askQuestion()
+                }))
+            }
         }
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text("Game over"), message: Text("Your score is \(score)"), dismissButton: .default(Text("Continue"), action: {
-                self.score = 0
-                self.questionNumber = 1
-                self.askQuestion()
-            }))
-        }
+        
     }
     
     func buttonTapped(_ number: Int) {
